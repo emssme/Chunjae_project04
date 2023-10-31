@@ -131,69 +131,6 @@
   </div>
 </section>
 <!-- 배너 끝 -->
-<!-- 마감임박 강의 & 오픈 예정 강의 -->
-<section class="container mb-100">
-  <div class="row">
-    <div class="col-lg-6 col-md-12">
-      <h2>인기 강의</h2>
-      <table class="table" id="notice-table">
-        <thead>
-        <tr>
-          <th width="200">제목</th>
-          <th>기간</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${popLectureList}" var="pop" varStatus="status">
-          <tr class="table-row">
-            <td class="text-center">
-              <a href="${path}/lecture/detail?lno=${pop.lno}">${pop.lname}</a>
-            </td>
-            <td class="text-center">~${pop.edate}</td>
-          </tr>
-        </c:forEach>
-        <!-- 추가 데이터 행 -->
-        <c:if test="${empty popLectureList}">
-          <tr>
-            <td colspan="2" class="text-center"><span
-                    style=" font-size: 20px;">마감임박 강의가 없습니다.</span></td>
-          </tr>
-        </c:if>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-lg-6 col-md-12 mt-lg-0 mt-md-4">
-      <h2>오픈예정 강의</h2>
-      <table class="table" id="new-table">
-        <thead>
-        <tr>
-          <th width="200">제목</th>
-          <th>기간</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${newLectureListt}" var="new" varStatus="status">
-          <tr class="table-row">
-            <td class="text-center">
-              <a href="${path}/lecture/detail?lno=${new.lno}">${new.lname}</a>
-            </td>
-            <td class="text-center">${new.sdate}~</td>
-          </tr>
-        </c:forEach>
-        <!-- 오픈 예정 강의가 없을때 -->
-        <c:if test="${empty newLectureListt}">
-          <tr>
-            <td colspan="2" class="text-center"><span
-                    style=" font-size: 20px;">오픈예정 강의가 없습니다.</span></td>
-          </tr>
-        </c:if>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-</div>
-</section>
 <!-- 강좌 목록 시작 -->
 <section class="section gray-bg" id="blog">
   <div class="course_details_area mb-5 mt-5">
@@ -226,28 +163,56 @@
         </div>
         <div class="col-lg-12 mt-4">
           <div class="row">
-            <!-- 강좌 목록-->
-            <c:forEach items="${lectureList }" var="list" varStatus="status">
-              <div class="col-lg-4">
-                <div class="blog-grid">
-                  <div class="blog-img" style="width: 350px; height: 280px;">
-                    <div class="date">${list.sname}</div>
-                    <a href="${path}/lecture/detail?lno=${list.lno}">
-                      <img src="${path}/resources/upload/lecture/${list.saveFile}" title alt="강의 이미지">
-                    </a>
+            <!-- 검색 엔진 시작 -->
+            <div class="container">
+              <div class="col-xl-4 col-md-6 float-right mb-20"  style="z-index: 10">
+                <form action="${path}/lecture/list" method="get" class="ml-4">
+                  <div class="form-group mb-0">
+                    <div class="input-group-append">
+                      <div class="control mb-0" style="border: 1px solid #ced4da; border-radius: 0.25rem;">
+                        <select id="type" name="type">
+                          <option value="T"> 제목 </option>
+                          <option value="C"> 내용 </option>
+                          <option value="W"> 강사 </option>
+                        </select>
+                      </div>
+                      <input type="text" name="keyword" class="form-control" placeholder="검색하기" aria-describedby="project-search-addon" />
+                      <input class="btn btn-info" type="submit" id="project-search-addon" value="검색"/>
+                    </div>
                   </div>
-                  <div class="blog-info">
-                    <h5>
-                      <a href="${path}/lecture/detail?lno=${list.lno}">${list.lname}</a>
-                    </h5>
-                    <p>${list.tname} 선생님</p>
-                    <p>${list.sdate} ~ ${list.edate}</p>
-                    <p>#{list.lprice}원</p>
-                    <a href="${path}/lecture/detail?lno=${list.lno}" class="btn-bar" style="color: #fe4f6c;">강좌 상세보기<i class="fa-solid fa-arrow-right"></i></a>
+                </form>
+              </div>
+            </div>
+            <!-- 검색 엔진 끝 -->
+            <!-- 강좌 목록-->
+            <c:if test="${!empty lectureList}">
+              <c:forEach items="${lectureList }" var="lecture" varStatus="status">
+                <div class="col-lg-4">
+                  <div class="blog-grid">
+                    <div class="blog-img" style="width: 350px; height: 280px;">
+                      <div class="date">${lecture.sname}</div>
+                      <a href="${path}/lecture/detail?lcode=${lecture.lcode}">
+                        <img src="${path}/resources/upload/lecture/${lecture.saveFile}" title alt="강의 이미지">
+                      </a>
+                    </div>
+                    <div class="blog-info">
+                      <h5>
+                        <a href="${path}/lecture/detail?lcode=${lecture.lcode}">${lecture.lname}</a>
+                      </h5>
+                      <p>${lecture.tname} 선생님</p>
+                      <p>${lecture.sdate} ~ ${list.edate}</p>
+                      <p>${lecture.lprice}원</p>
+                      <a href="${path}/lecture/detail?lcode=${lecture.lcode}" class="btn-bar" style="color: #fe4f6c;">강좌 상세보기<i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
                   </div>
                 </div>
+              </c:forEach>
+            </c:if>
+            <c:if test="${empty lectureList}">
+              <div class="justify-content-center">
+                <p>등록된 강의가 없습니다.</p>
               </div>
-            </c:forEach>
+            </c:if>
           </div>
           <!-- 페이지 시작 -->
           <div class="pt-3">

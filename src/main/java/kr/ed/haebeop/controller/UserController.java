@@ -154,9 +154,6 @@ public class UserController {
         User user = userService.getUser(id);
         model.addAttribute("user", user);
 
-        //총 리뷰일수 가져오기
-        int totalReview = reviewService.getCount(id);
-        model.addAttribute("totalReview", totalReview);
 
         //총 수강신청개수
         int totalLecture = registerService.getMyCount(id);

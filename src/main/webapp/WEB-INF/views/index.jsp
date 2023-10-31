@@ -10,6 +10,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
     <title> 해법 </title>
     <jsp:include page="./setting/head.jsp"/>
+    <style>
+        button.player_btn {border: none;background-color: #ffffff;}
+        .contents {
+            clear: both;
+            height: 300px;
+        }
+
+        .contents::after {
+            content:"";
+            clear:both;
+            display:block;
+            width:100%;
+        }
+
+        .vs {
+            clear: both;
+            width: 100%;
+            min-height: 300px;
+            background-color: rgb(255, 255, 255);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img_box {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .img_box li {
+            visibility:hidden;
+            opacity:0;
+            transition-duration:0.7s;
+            transition-delay:0.1s;
+            width:100%;
+            height:300px;
+        }
+
+        .img_box li .bg_box {
+            width:100%;
+            height:300px;
+            background-repeat: no-repeat;
+            background-position:center center;
+            background-size:cover;
+            position:absolute;
+            left: 0;
+            top: 0;
+            z-index:5;
+        }
+
+        .img_box li.active .bg_box {
+            z-index:6;
+        }
+
+        .img_box li.item1 .bg_box {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("${path}/resources/images/education01.jpg");
+            border-radius: 20px;
+        }
+
+        .img_box li.item2 .bg_box {
+            background-image: url("${path}/resources/images/education02.jpg");
+            border-radius: 20px;
+        }
+
+        .img_box li .vs_tit {
+            position:absolute;
+            top:150px; left:100px;
+            z-index:10;
+            font-weight: 100;
+            font-size: 40px;
+            line-height: 1.3;
+            color: #ffd500;
+        }
+        .img_box li.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .btn_box li .vs_btn {
+            display:block;
+            width: 15px;
+            height: 15px;
+            background-color:rgba(255,255,255,0.8);
+            border:2px solid #fff;
+            position:absolute;
+            top:10%;
+            left: 3%;
+            z-index:14;
+            cursor:pointer;
+            border-radius:50%;
+        }
+
+        .btn_box li.item2 .vs_btn {
+            left: 4.5%;
+        }
+
+        .btn_box li.active .vs_btn {
+            background-color: #fff;
+            border:2px solid #333;
+        }
+
+        .vs_ra {
+            display: none;
+        }
+
+        .play_btn {
+            display:block;
+            width: 12px;
+            height: 12px;
+            position:absolute;
+            top:98px;
+            left: 164px;
+            z-index:14;
+            cursor:pointer;
+            color: #fff;
+            border:0;
+            background-color: transparent;
+            font-weight: 900; }
+
+        /*게시글 목록*/
+        .table caption {
+            margin-bottom: 10px;
+        }
+        .table caption a {
+            color: #333333;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .table a {
+            color: #333333;
+        }
+
+    </style>
 </head>
 <body>
 <!-- Header 시작 -->
@@ -18,23 +151,78 @@
 
 <!--================ Start Home Banner Area =================-->
 <section class="home_banner_area">
-    <div class="banner_inner">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="banner_content text-center">
-                        <p class="text-uppercase">
-                            Best online education service In the world
-                        </p>
-                        <h2 class="text-uppercase mt-4 mb-5">
-                            One Step Ahead This Season
-                        </h2>
-                        <div>
-                            <a href="#" class="primary-btn2 mb-3 mb-sm-0">learn more</a>
-                            <a href="#" class="primary-btn ml-sm-3 ml-0">see course</a>
-                        </div>
+    <div class="container">
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <article class="columns is-multiline is-justify-content-center mb-6">
+                    <div class="column is-12">
+                        <figure class="vs">
+                            <ul class="img_box">
+                                <li class="item1 active">
+                                    <input type="radio" name="vs_ra" id="vs_ra1" class="vs_ra" checked>
+                                    <div class="bg_box"></div>
+                                </li>
+                                <li class="item2">
+                                    <input type="radio" name="vs_ra" id="vs_ra2" class="vs_ra">
+                                    <div class="bg_box"></div>
+                                </li>
+                            </ul>
+                            <ul class="btn_box">
+                                <li class="item1 active"><label for="vs_ra1" class="vs_btn"></label></li>
+                                <li class="item2"><label for="vs_ra2" class="vs_btn"></label></li>
+                            </ul>
+                            <button type="button" class="play_btn"></button>
+                        </figure>
+                        <script>
+                            $(function(){
+                                $(".btn_box li .vs_btn").click(function(){
+                                    var par = $(this).parents("li").index();
+                                    $(".img_box li").removeClass("active");
+                                    $(".img_box li").eq(par).addClass("active");
+                                    $(".btn_box li").removeClass("active");
+                                    $(".btn_box li").eq(par).addClass("active");
+                                });
+                                var sw = 1;
+                                var int1 = setInterval(function(){
+                                    if(sw==1){
+                                        autoplay(1);
+                                        sw = 0;
+                                    } else {
+                                        autoplay(0);
+                                        sw = 1;
+                                    }
+                                }, 5000);
+
+                                function autoplay(n){
+                                    $(".img_box li").removeClass("active");
+                                    $(".img_box li").eq(n).addClass("active");
+                                    $(".btn_box li").removeClass("active");
+                                    $(".btn_box li").eq(n).addClass("active");
+                                }
+
+                                $(".play_btn").click(function(){
+                                    if($(this).hasClass("active")){
+                                        $(this).removeClass("active");
+                                        sw = 1;
+                                        int1 = setInterval(function(){
+                                            if(sw==1){
+                                                autoplay(1);
+                                                sw = 0;
+                                            } else {
+                                                autoplay(0);
+                                                sw = 1;
+                                            }
+                                        }, 3500);
+                                    } else {
+                                        $(this).addClass("active");
+                                        sw = 0;
+                                        clearInterval(int1);
+                                    }
+                                });
+                            });
+                        </script>
                     </div>
-                </div>
+                </article>
             </div>
         </div>
     </div>
@@ -43,566 +231,96 @@
 
 <!--================ Start Feature Area =================-->
 <section class="feature_area section_gap_top">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="main_title">
-                    <h2 class="mb-3">Awesome Feature</h2>
-                    <p>
-                        Replenish man have thing gathering lights yielding shall you
-                    </p>
-                </div>
-            </div>
+    <div class="columns is-desktop is-multiline">
+        <!-- 커뮤니티 -->
+        <div class="column is-one-third">
+            <table class="table">
+                <caption><a href="${path}/community/list" style="color: #333333"> 커뮤니티 </a></caption>
+                <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th class="has-text-centered">제목</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${indexComList}" var="community" varStatus="status">
+                    <tr>
+                        <td class="has-text-centered">${status.count}</td>
+                        <c:if test="${empty sid}">
+                            <td style="overflow: hidden">${community.title}</td>
+                        </c:if>
+                        <c:if test="${!empty sid}">
+                            <td><a href="${path}/qna/detail.do?qno=${community.cno}" style="overflow: hidden">${community.title}</a></td>
+                        </c:if>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty indexComList}">
+                    <tr>
+                        <td colspan="2" class="has-text-centered"> 게시글이 없습니다. </td>
+                    </tr>
+                </c:if>
+                </tbody>
+            </table>
         </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="single_feature">
-                    <div class="icon"><span class="flaticon-student"></span></div>
-                    <div class="desc">
-                        <h4 class="mt-3 mb-2">Scholarship Facility</h4>
-                        <p>
-                            One make creepeth, man bearing theira firmament won't great
-                            heaven
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="single_feature">
-                    <div class="icon"><span class="flaticon-book"></span></div>
-                    <div class="desc">
-                        <h4 class="mt-3 mb-2">Sell Online Course</h4>
-                        <p>
-                            One make creepeth, man bearing theira firmament won't great
-                            heaven
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="single_feature">
-                    <div class="icon"><span class="flaticon-earth"></span></div>
-                    <div class="desc">
-                        <h4 class="mt-3 mb-2">Global Certification</h4>
-                        <p>
-                            One make creepeth, man bearing theira firmament won't great
-                            heaven
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <!-- 공지사항 -->
+        <div class="column is-one-third">
+            <table class="table">
+                <caption><a href="${path}/lecture/list" style="color: #333333"> 인기강의 </a></caption>
+                <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th class="has-text-centered">제목</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${popularLectures}" var="list" varStatus="status">
+                    <tr>
+                        <td class="has-text-centered">${status.count}</td>
+                        <c:if test="${empty sid}">
+                            <td style="overflow: hidden">${list.ltitle}</td>
+                        </c:if>
+                        <c:if test="${!empty sid}">
+                            <td><a href="${path}/qna/detail?lcode=${list.lcode}" style="overflow: hidden">${list.ltitle}</a></td>
+                        </c:if>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty popularLectures}">
+                    <tr>
+                        <td colspan="2" class="has-text-centered"> 강의 없습니다. </td>
+                    </tr>
+                </c:if>
+                </tbody>
+            </table>
+        </div>
+        <!-- QnA -->
+        <div class="column is-one-third">
+            <table class="table">
+                <caption><a href="${path}/qna/list.do" style="color: #333333"> Q & A </a></caption>
+                <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th class="has-text-centered">제목</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${reviews}" var="rev" varStatus="status">
+                    <tr>
+                        <td class="has-text-centered">${status.count}</td>
+                        <td>${rev.content}</td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty reviews}">
+                    <tr>
+                        <td colspan="2" class="has-text-centered"> 리뷰가 없습니다. </td>
+                    </tr>
+                </c:if>
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
 <!--================ End Feature Area =================-->
 
-<!--================ Start Popular Courses Area =================-->
-<div class="popular_courses">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="main_title">
-                    <h2 class="mb-3">Our Popular Courses</h2>
-                    <p>
-                        Replenish man have thing gathering lights yielding shall you
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- single course -->
-            <div class="col-lg-12">
-                <div class="owl-carousel active_course">
-                    <div class="single_course">
-                        <div class="course_head">
-                            <img class="img-fluid" src="img/courses/c1.jpg" alt="" />
-                        </div>
-                        <div class="course_content">
-                            <span class="price">$25</span>
-                            <span class="tag mb-4 d-inline-block">design</span>
-                            <h4 class="mb-3">
-                                <a href="course-details.html">Custom Product Design</a>
-                            </h4>
-                            <p>
-                                One make creepeth man bearing their one firmament won't fowl
-                                meat over sea
-                            </p>
-                            <div
-                                    class="course_meta d-flex justify-content-lg-between align-items-lg-center flex-lg-row flex-column mt-4"
-                            >
-                                <div class="authr_meta">
-                                    <img src="img/courses/author1.png" alt="" />
-                                    <span class="d-inline-block ml-2">Cameron</span>
-                                </div>
-                                <div class="mt-lg-0 mt-3">
-                      <span class="meta_info mr-4">
-                        <a href="#"> <i class="ti-user mr-2"></i>25 </a>
-                      </span>
-                                    <span class="meta_info"
-                                    ><a href="#"> <i class="ti-heart mr-2"></i>35 </a></span
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single_course">
-                        <div class="course_head">
-                            <img class="img-fluid" src="img/courses/c2.jpg" alt="" />
-                        </div>
-                        <div class="course_content">
-                            <span class="price">$25</span>
-                            <span class="tag mb-4 d-inline-block">design</span>
-                            <h4 class="mb-3">
-                                <a href="course-details.html">Social Media Network</a>
-                            </h4>
-                            <p>
-                                One make creepeth man bearing their one firmament won't fowl
-                                meat over sea
-                            </p>
-                            <div
-                                    class="course_meta d-flex justify-content-lg-between align-items-lg-center flex-lg-row flex-column mt-4"
-                            >
-                                <div class="authr_meta">
-                                    <img src="img/courses/author2.png" alt="" />
-                                    <span class="d-inline-block ml-2">Cameron</span>
-                                </div>
-                                <div class="mt-lg-0 mt-3">
-                      <span class="meta_info mr-4">
-                        <a href="#"> <i class="ti-user mr-2"></i>25 </a>
-                      </span>
-                                    <span class="meta_info"
-                                    ><a href="#"> <i class="ti-heart mr-2"></i>35 </a></span
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="single_course">
-                        <div class="course_head">
-                            <img class="img-fluid" src="img/courses/c3.jpg" alt="" />
-                        </div>
-                        <div class="course_content">
-                            <span class="price">$25</span>
-                            <span class="tag mb-4 d-inline-block">design</span>
-                            <h4 class="mb-3">
-                                <a href="course-details.html">Computer Engineering</a>
-                            </h4>
-                            <p>
-                                One make creepeth man bearing their one firmament won't fowl
-                                meat over sea
-                            </p>
-                            <div
-                                    class="course_meta d-flex justify-content-lg-between align-items-lg-center flex-lg-row flex-column mt-4"
-                            >
-                                <div class="authr_meta">
-                                    <img src="img/courses/author3.png" alt="" />
-                                    <span class="d-inline-block ml-2">Cameron</span>
-                                </div>
-                                <div class="mt-lg-0 mt-3">
-                      <span class="meta_info mr-4">
-                        <a href="#"> <i class="ti-user mr-2"></i>25 </a>
-                      </span>
-                                    <span class="meta_info"
-                                    ><a href="#"> <i class="ti-heart mr-2"></i>35 </a></span
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--================ End Popular Courses Area =================-->
-
-<!--================ Start Registration Area =================-->
-<div class="section_gap registration_area">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-7">
-                <div class="row clock_sec clockdiv" id="clockdiv">
-                    <div class="col-lg-12">
-                        <h1 class="mb-3">Register Now</h1>
-                        <p>
-                            There is a moment in the life of any aspiring astronomer that
-                            it is time to buy that first telescope. It’s exciting to think
-                            about setting up your own viewing station.
-                        </p>
-                    </div>
-                    <div class="col clockinner1 clockinner">
-                        <h1 class="days">150</h1>
-                        <span class="smalltext">Days</span>
-                    </div>
-                    <div class="col clockinner clockinner1">
-                        <h1 class="hours">23</h1>
-                        <span class="smalltext">Hours</span>
-                    </div>
-                    <div class="col clockinner clockinner1">
-                        <h1 class="minutes">47</h1>
-                        <span class="smalltext">Mins</span>
-                    </div>
-                    <div class="col clockinner clockinner1">
-                        <h1 class="seconds">59</h1>
-                        <span class="smalltext">Secs</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 offset-lg-1">
-                <div class="register_form">
-                    <h3>Courses for Free</h3>
-                    <p>It is high time for learning</p>
-                    <form
-                            class="form_area"
-                            id="myForm"
-                            action="mail.html"
-                            method="post"
-                    >
-                        <div class="row">
-                            <div class="col-lg-12 form_group">
-                                <input
-                                        name="name"
-                                        placeholder="Your Name"
-                                        required=""
-                                        type="text"
-                                />
-                                <input
-                                        name="name"
-                                        placeholder="Your Phone Number"
-                                        required=""
-                                        type="tel"
-                                />
-                                <input
-                                        name="email"
-                                        placeholder="Your Email Address"
-                                        pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
-                                        required=""
-                                        type="email"
-                                />
-                            </div>
-                            <div class="col-lg-12 text-center">
-                                <button class="primary-btn">Submit</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--================ End Registration Area =================-->
-
-<!--================ Start Trainers Area =================-->
-<section class="trainer_area section_gap_top">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="main_title">
-                    <h2 class="mb-3">Our Expert Trainers</h2>
-                    <p>
-                        Replenish man have thing gathering lights yielding shall you
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center d-flex align-items-center">
-            <div class="col-lg-3 col-md-6 col-sm-12 single-trainer">
-                <div class="thumb d-flex justify-content-sm-center">
-                    <img class="img-fluid" src="img/trainer/t1.jpg" alt="" />
-                </div>
-                <div class="meta-text text-sm-center">
-                    <h4>Mated Nithan</h4>
-                    <p class="designation">Sr. web designer</p>
-                    <div class="mb-4">
-                        <p>
-                            If you are looking at blank cassettes on the web, you may be
-                            very confused at the.
-                        </p>
-                    </div>
-                    <div class="align-items-center justify-content-center d-flex">
-                        <a href="#"><i class="ti-facebook"></i></a>
-                        <a href="#"><i class="ti-twitter"></i></a>
-                        <a href="#"><i class="ti-linkedin"></i></a>
-                        <a href="#"><i class="ti-pinterest"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12 single-trainer">
-                <div class="thumb d-flex justify-content-sm-center">
-                    <img class="img-fluid" src="img/trainer/t2.jpg" alt="" />
-                </div>
-                <div class="meta-text text-sm-center">
-                    <h4>David Cameron</h4>
-                    <p class="designation">Sr. web designer</p>
-                    <div class="mb-4">
-                        <p>
-                            If you are looking at blank cassettes on the web, you may be
-                            very confused at the.
-                        </p>
-                    </div>
-                    <div class="align-items-center justify-content-center d-flex">
-                        <a href="#"><i class="ti-facebook"></i></a>
-                        <a href="#"><i class="ti-twitter"></i></a>
-                        <a href="#"><i class="ti-linkedin"></i></a>
-                        <a href="#"><i class="ti-pinterest"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12 single-trainer">
-                <div class="thumb d-flex justify-content-sm-center">
-                    <img class="img-fluid" src="img/trainer/t3.jpg" alt="" />
-                </div>
-                <div class="meta-text text-sm-center">
-                    <h4>Jain Redmel</h4>
-                    <p class="designation">Sr. Faculty Data Science</p>
-                    <div class="mb-4">
-                        <p>
-                            If you are looking at blank cassettes on the web, you may be
-                            very confused at the.
-                        </p>
-                    </div>
-                    <div class="align-items-center justify-content-center d-flex">
-                        <a href="#"><i class="ti-facebook"></i></a>
-                        <a href="#"><i class="ti-twitter"></i></a>
-                        <a href="#"><i class="ti-linkedin"></i></a>
-                        <a href="#"><i class="ti-pinterest"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12 single-trainer">
-                <div class="thumb d-flex justify-content-sm-center">
-                    <img class="img-fluid" src="img/trainer/t4.jpg" alt="" />
-                </div>
-                <div class="meta-text text-sm-center">
-                    <h4>Nathan Macken</h4>
-                    <p class="designation">Sr. web designer</p>
-                    <div class="mb-4">
-                        <p>
-                            If you are looking at blank cassettes on the web, you may be
-                            very confused at the.
-                        </p>
-                    </div>
-                    <div class="align-items-center justify-content-center d-flex">
-                        <a href="#"><i class="ti-facebook"></i></a>
-                        <a href="#"><i class="ti-twitter"></i></a>
-                        <a href="#"><i class="ti-linkedin"></i></a>
-                        <a href="#"><i class="ti-pinterest"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--================ End Trainers Area =================-->
-
-<!--================ Start Events Area =================-->
-<div class="events_area">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="main_title">
-                    <h2 class="mb-3 text-white">Upcoming Events</h2>
-                    <p>
-                        Replenish man have thing gathering lights yielding shall you
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="single_event position-relative">
-                    <div class="event_thumb">
-                        <img src="img/event/e1.jpg" alt="" />
-                    </div>
-                    <div class="event_details">
-                        <div class="d-flex mb-4">
-                            <div class="date"><span>15</span> Jun</div>
-
-                            <div class="time-location">
-                                <p>
-                                    <span class="ti-time mr-2"></span> 12:00 AM - 12:30 AM
-                                </p>
-                                <p>
-                                    <span class="ti-location-pin mr-2"></span> Hilton Quebec
-                                </p>
-                            </div>
-                        </div>
-                        <p>
-                            One make creepeth man for so bearing their firmament won't
-                            fowl meat over seas great
-                        </p>
-                        <a href="#" class="primary-btn rounded-0 mt-3">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="single_event position-relative">
-                    <div class="event_thumb">
-                        <img src="img/event/e2.jpg" alt="" />
-                    </div>
-                    <div class="event_details">
-                        <div class="d-flex mb-4">
-                            <div class="date"><span>15</span> Jun</div>
-
-                            <div class="time-location">
-                                <p>
-                                    <span class="ti-time mr-2"></span> 12:00 AM - 12:30 AM
-                                </p>
-                                <p>
-                                    <span class="ti-location-pin mr-2"></span> Hilton Quebec
-                                </p>
-                            </div>
-                        </div>
-                        <p>
-                            One make creepeth man for so bearing their firmament won't
-                            fowl meat over seas great
-                        </p>
-                        <a href="#" class="primary-btn rounded-0 mt-3">View Details</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-12">
-                <div class="text-center pt-lg-5 pt-3">
-                    <a href="#" class="event-link">
-                        View All Event <img src="img/next.png" alt="" />
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--================ End Events Area =================-->
-
-<!--================ Start Testimonial Area =================-->
-<div class="testimonial_area section_gap">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="main_title">
-                    <h2 class="mb-3">Client say about me</h2>
-                    <p>
-                        Replenish man have thing gathering lights yielding shall you
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="testi_slider owl-carousel">
-                <div class="testi_item">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <img src="img/testimonials/t1.jpg" alt="" />
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="testi_text">
-                                <h4>Elite Martin</h4>
-                                <p>
-                                    Him, made can't called over won't there on divide there
-                                    male fish beast own his day third seed sixth seas unto.
-                                    Saw from
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testi_item">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <img src="img/testimonials/t2.jpg" alt="" />
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="testi_text">
-                                <h4>Davil Saden</h4>
-                                <p>
-                                    Him, made can't called over won't there on divide there
-                                    male fish beast own his day third seed sixth seas unto.
-                                    Saw from
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testi_item">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <img src="img/testimonials/t1.jpg" alt="" />
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="testi_text">
-                                <h4>Elite Martin</h4>
-                                <p>
-                                    Him, made can't called over won't there on divide there
-                                    male fish beast own his day third seed sixth seas unto.
-                                    Saw from
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testi_item">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <img src="img/testimonials/t2.jpg" alt="" />
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="testi_text">
-                                <h4>Davil Saden</h4>
-                                <p>
-                                    Him, made can't called over won't there on divide there
-                                    male fish beast own his day third seed sixth seas unto.
-                                    Saw from
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testi_item">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <img src="img/testimonials/t1.jpg" alt="" />
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="testi_text">
-                                <h4>Elite Martin</h4>
-                                <p>
-                                    Him, made can't called over won't there on divide there
-                                    male fish beast own his day third seed sixth seas unto.
-                                    Saw from
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testi_item">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6">
-                            <img src="img/testimonials/t2.jpg" alt="" />
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="testi_text">
-                                <h4>Davil Saden</h4>
-                                <p>
-                                    Him, made can't called over won't there on divide there
-                                    male fish beast own his day third seed sixth seas unto.
-                                    Saw from
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <!--================ End Testimonial Area =================-->
 <!-- Footer 시작 -->
     <jsp:include page="./layout/footer.jsp"/>

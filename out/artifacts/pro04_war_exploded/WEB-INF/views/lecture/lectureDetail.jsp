@@ -107,7 +107,7 @@
                         </a>
                     </li>
                 </ul>
-                <a href="${path}/register" class="primary-btn2 text-uppercase enroll rounded-0 text-white">수강신청 하기</a>
+                <a href="${path}/payment/payment?lcode=${lecture.lcode}&bcode=${lecture.bcode}" class="primary-btn2 text-uppercase enroll rounded-0 text-white">수강신청 하기</a>
                 <!-- 강좌 리뷰 -->
                 <h4 class="title">Reviews</h4>
                 <div class="content">

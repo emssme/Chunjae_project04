@@ -20,10 +20,13 @@
                 >
                     <ul class="nav navbar-nav menu_nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="${path}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about-us.html">About</a>
+                            <a class="nav-link" href="${path}/lecture/list">강의</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="${path}/community/list">커뮤니티</a>
                         </li>
                         <li class="nav-item submenu dropdown">
                             <a
@@ -33,45 +36,21 @@
                                     role="button"
                                     aria-haspopup="true"
                                     aria-expanded="false"
-                            >Pages</a
+                            >고객지원</a
                             >
                             <ul class="dropdown-menu">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="courses.html">Courses</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="course-details.html"
-                                    >Course Details</a
+                                    <a class="nav-link" href="${path}/notice/list"
+                                    >공지사항</a
                                     >
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="elements.html">Elements</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a
-                                    href="#"
-                                    class="nav-link dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    role="button"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                            >Blog</a
-                            >
-                            <ul class="dropdown-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="blog.html">Blog</a>
+                                    <a class="nav-link" href="${path}/fileboard/list">자료실</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="single-blog.html"
-                                    >Blog Details</a
-                                    >
+                                    <a class="nav-link" href="${path}/qna/list">질문 및 답변</a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
                         </li>
                         <c:if test="${sid eq null}">
                         <li class="nav-item">
