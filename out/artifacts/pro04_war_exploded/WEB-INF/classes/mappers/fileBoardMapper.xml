@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.ed.haebeop.persistence.FileboardMapper">
+    <!-- 자료실 목록 -->
+    <select id="fileList" resultType="kr.ed.haebeop.domain.Fileboard">
+        <![CDATA[
+        select * from fileboard
+        ]]>
+        <where>
+            <if test="type != null">
+                <trim prefixOverrides="OR">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            title LIKE concat('%', #{keyword}, '%')
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            content LIKE concat('%', #{keyword}, '%')
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            id LIKE concat('%', #{keyword}, '%')
+                        </when>
+                    </choose>
+                </trim>
+            </if>
+        </where>
+        <![CDATA[
+        ORDER BY articleno DESC LIMIT #{postStart}, #{postCount}
+        ]]>
+    </select>
+
+    <!-- 자료실 상세보기 -->
+    <select id="fileDetail" resultType="kr.ed.haebeop.domain.Fileboard">
+        select * from fileboard where articleno=#{articleno}
+    </select>
+
+    <!-- 글 수 카운트 -->
+    <select id="getCount" resultType="integer" >
+        select count(*) from fileboard
+        <where>
+            <if test="type != null">
+                <trim prefixOverrides="OR">
+                    <choose>
+                        <when test="type == 'T'.toString()">
+                            title LIKE concat('%', #{keyword}, '%')
+                        </when>
+                        <when test="type == 'C'.toString()">
+                            content LIKE concat('%', #{keyword}, '%')
+                        </when>
+                        <when test="type == 'W'.toString()">
+                            id LIKE concat('%', #{keyword}, '%')
+                        </when>
+                    </choose>
+                </trim>
+            </if>
+        </where>
+    </select>
+
+    <!-- 자료실 글 추가 -->
+    <insert id="writeArticle" parameterType="fileboard">
+        insert into fileboard
+        values (default, #{id}, #{title}, #{content}, default, default, default)
+        <selectKey resultType="int" keyProperty="articleno" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <!--글 삭제-->
+    <delete id="fileboardDelete">
+        delete from fileboard where articleno=#{articleno}
+    </delete>
+    <!--	글수정-->
+    <update id="fileboardEdit">
+        update fileboard
+        set title=#{title}, content=#{content}
+        where articleno = #{articleno}
+    </update>
+
+    <!-- 파일 추가 -->
+    <insert id="fileRegister" parameterType="fileboard">
+        insert into fileinfo (articleno, savefolder, originfile, savefile)
+        values
+        <foreach collection="fileInfos" item="fileinfo" separator=" , ">
+            (#{articleno}, #{fileinfo.saveFolder}, #{fileinfo.originFile}, #{fileinfo.saveFile})
+        </foreach>
+    </insert>
+    <resultMap type="fileboard" id="fileboardList">
+        <result property="articleno" column="articleno"/>
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="regdate" column="regdate"/>
+        <result property="visited" column="visited"/>
+        <result property="rec" column="rec"/>
+        <collection property="fileInfos" column="articleno" javaType="list" ofType="FileInfo" select="fileInfos"/>
+    </resultMap>
+    <!-- 업로드 파일을 List로 출력 -->
+    <select id="listArticle" parameterType="map" resultMap="fileboardList">
+        select articleno, id, title, content, regdate
+        from fileboard
+        <if test="word != null and word != ''">
+            <if test="key == 'title'">
+                where rirle like concat('%', #{word}, '%')
+            </if>
+            <if test="key != 'title'">
+                where ${key} = #{word}
+            </if>
+        </if>
+        order by articleno desc
+        limit #{start}, #{spp}
+    </select>
+
+    <!-- 조회수 업데이트 -->
+    <update id="visitedUpdate">
+        update fileboard set visited=visited+1 where articleno=#{articleno}
+    </update>
+
+    <!-- 추천수 업데이트 -->
+    <update id="recUpdate">
+        update fileboard set rec=rec+1 where articleno=#{articleno}
+    </update>
+</mapper>

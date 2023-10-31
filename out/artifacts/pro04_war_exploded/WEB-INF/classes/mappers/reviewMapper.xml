@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.ed.haebeop.persistence.ReviewMapper">
+
+    <select id="reviewList" resultType="kr.ed.haebeop.domain.Review">
+        SELECT * FROM review where lcode = #{lcode} order by rcode desc
+        LIMIT #{postStart}, #{postCount}
+    </select>
+
+
+    <insert id="reviewInsert">
+        INSERT INTO review VALUES(DEFAULT, #{lcode}, #{id}, #{star}, #{content}, defuault)
+    </insert>
+
+    <select id="getCount" resultType="integer">
+        select count(*) from review where lcode = #{lcode}
+    </select>
+
+    <delete id="reviewDelete">
+        delete from review where rcode=#{rcode}
+    </delete>
+
+</mapper>
